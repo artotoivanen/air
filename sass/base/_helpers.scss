@@ -4,6 +4,51 @@
 // Mixins and other essentials for global theme development.
 // ---------------------------------------------------------
 
+// CSS Grid mixin with flexbox fallback for IE and Edge
+@mixin grid($columns, $fr: 1, $min_height: 100px, $max_height: auto, $gutter_x: 16px, $gutter_y: 16px) {
+  display: grid;
+  grid-template-columns: repeat($columns, #{$fr}fr);
+  grid-auto-rows: minmax($min_height, $max_height);
+  grid-column-gap: $gutter_x;
+  grid-row-gap: $gutter_y;
+
+  // Internet Explorer
+  @media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
+    display: flex;
+    flex-wrap: wrap;
+    overflow: hidden;
+
+    > div {
+      $grid_width: 100% / $columns;
+      width: calc(#{$grid_width} - #{$gutter_x});
+      margin-right: $gutter_x;
+      margin-bottom: $gutter_y;
+
+      &:nth-child(#{$columns}n+#{$columns}) {
+        margin-right: 0;
+      }
+    }
+  }
+
+  // Edge
+  @supports (-ms-ime-align: auto) {
+    display: flex;
+    flex-wrap: wrap;
+    overflow: hidden;
+
+    > div {
+      $grid_width: 100% / $columns;
+      width: calc(#{$grid_width} - #{$gutter_x});
+      margin-right: $gutter_x;
+      margin-bottom: $gutter_y;
+
+      &:nth-child(#{$columns}n+#{$columns}) {
+        margin-right: 0;
+      }
+    }
+  }
+}
+
 // Backgrounds
 @mixin background-cover() {
   background: {
@@ -67,12 +112,8 @@
 @mixin fontFace($family, $src, $weight: normal, $style: normal) {
   @font-face {
     font-family: $family;
-      src: url('#{$src}.eot');
-      src: url('#{$src}.eot?#iefix') format('embedded-opentype'),
-        url('#{$src}.woff') format('woff'),
-        url('#{$src}.woff2') format('woff2'),
-        url('#{$src}.ttf') format('truetype'),
-        url('#{$src}.svg##{$family}') format('svg');
+    src: url('#{$src}.eot');
+    src: url('#{$src}.eot?#iefix') format('embedded-opentype'), url('#{$src}.woff') format('woff'), url('#{$src}.woff2') format('woff2'), url('#{$src}.ttf') format('truetype'), url('#{$src}.svg##{$family}') format('svg');
     font-style: $style;
     font-weight: $weight;
   }
@@ -126,9 +167,11 @@ html,
 *,
 *:before,
 *:after {
+  /* autoprefixer: ignore next */
   box-sizing: border-box;
 }
 
 img {
+  /* autoprefixer: ignore next */
   box-sizing: content-box;
 }

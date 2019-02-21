@@ -78,6 +78,18 @@ del {
   video {
     max-width: 100%;
   }
+
+  // Don't add extra margin on top of first title
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    &:first-child {
+      margin-top: 0;
+    }
+  }
 }
 
 // Tables, codes and pres
@@ -222,12 +234,12 @@ ul.tags {
       border-radius: 4px;
       background: #f0f0f0;
       opacity: .8;
+    }
 
-      &:hover {
-        color: #fff;
-        background: #aaa;
-        opacity: 1;
-      }
+    a:hover {
+      color: #fff;
+      background: #aaa;
+      opacity: 1;
     }
   }
 }
